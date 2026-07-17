@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Method Dict</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- LEFT SIDE: SEARCH & RESULTS -->
+    <div class="main-panel">
+      <header>
+        <h2>METHOD<span>//</span>DICT</h2>
+      </header>
+
+      <div id="controls">
+        <input id="start" placeholder="Starts with (Tab)" autocomplete="off">
+        <input id="endInput" placeholder="Ends with" autocomplete="off">
+        <input id="minLen" type="number" placeholder="Min" min="1">
+        
+        <div class="control-group">
+          <button id="clearBtn" type="button">Clear</button>
+          <button id="capBtn" type="button">Cap: 10</button>
+          <button id="quickFireBtn">QuickFire: OFF</button>
+        </div>
+
+        <select id="sortMode">
+          <option value="short">Short → Long</option>
+          <option value="long">Long → Short</option>
+          <option value="alpha">Alphabetical</option>
+        </select>
+      </div>
+
+      <div id="results-wrapper">
+        <div class="results-header">
+          <span class="results-count">0 WORDS</span>
+          <input id="resultFilter" placeholder="Filter results...">
+        </div>
+        <ul id="results"></ul>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: HEATMAP & SHORTCUTS -->
+    <div class="side-panel">
+      <h3>METHODS</h3>
+      <div id="buttons"></div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
