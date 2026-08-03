@@ -2,54 +2,625 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Method Dict</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>method_dict</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --white: #ffffff;
+      --light: #e0e0e0;
+      --mid: #aaaaaa;
+      --dark: #2a2a2a;
+      --black: #0e0e0e;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-hover: rgba(255, 255, 255, 0.3);
+      --card-bg: rgba(25, 25, 25, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background:
+        radial-gradient(ellipse 600px 600px at 3% -8%, rgba(90, 106, 128, 0.5), transparent 65%),
+        radial-gradient(ellipse 550px 550px at 100% 108%, rgba(110, 120, 135, 0.45), transparent 65%),
+        var(--black);
+      color: var(--white);
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      touch-action: manipulation;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 0;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    main {
+      position: relative;
+      z-index: 3;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .box {
+      width: 100%;
+      max-width: 1400px;
+      height: calc(100vh - 48px);
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      padding: 32px;
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      animation: cardEntry 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @keyframes cardEntry {
+      from { opacity: 0; transform: translateY(24px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      letter-spacing: -2px;
+      text-transform: lowercase;
+      margin-bottom: 20px;
+      text-align: left;
+      width: fit-content;
+      color: var(--white);
+      position: relative;
+      display: inline-block;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      background: var(--white);
+      border-radius: 0;
+    }
+
+    .app-layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      gap: 24px;
+    }
+
+    /* ===== LEFT PANEL ===== */
+    .main-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ===== CONTROLS ===== */
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .control-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    input, select {
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--white);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: 0;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      transition: border-color 0.3s ease;
+    }
+
+    input::placeholder {
+      color: var(--mid);
+      opacity: 0.6;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--border-hover);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='%23aaaaaa' height='10' viewBox='0 0 10 10' width='10' xmlns='http://www.w3.org/2000/svg'><path d='M0 2l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    button {
+      font-family: 'Space Grotesk', sans-serif;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 12px 14px;
+      border-radius: 0;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-hover);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button.active {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    #endInput:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* ===== RESULTS ===== */
+    #results-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .results-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .results-count {
+      font-size: 10px;
+      color: var(--mid);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    #resultFilter {
+      padding: 8px 12px;
+      font-size: 12px;
+      max-width: 200px;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.35);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    #results {
+      margin: 0;
+      padding: 12px;
+      list-style: none;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    #results li {
+      padding: 8px 12px;
+      color: var(--light);
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: background 0.1s ease;
+      border-left: 2px solid transparent;
+    }
+
+    #results li:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-left-color: var(--white);
+    }
+
+    /* Word ending highlight */
+    .litMatch {
+      color: var(--white);
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    }
+
+    /* ===== RIGHT PANEL ===== */
+    .side-panel {
+      width: 340px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .side-panel h3 {
+      margin: 0 0 16px 0;
+      font-size: 11px;
+      color: var(--mid);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    #buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+      gap: 8px;
+      overflow-y: auto;
+      padding-right: 8px;
+      flex: 1;
+    }
+
+    #buttons button {
+      padding: 10px 4px;
+      font-size: 11px;
+      text-transform: lowercase;
+      letter-spacing: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    @media (max-width: 900px) {
+      .app-layout {
+        flex-direction: column;
+      }
+      .side-panel {
+        width: 100%;
+        max-height: 300px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <div class="app-layout">
-    
-    <!-- LEFT SIDE: SEARCH & RESULTS -->
-    <div class="main-panel">
-      <header>
-        <h2>METHOD<span>//</span>DICT</h2>
-      </header>
+  <main>
+    <div class="box">
+      <h1 class="title">method_dict</h1>
 
-      <div id="controls">
-        <input id="start" placeholder="Starts with (Tab)" autocomplete="off">
-        <input id="endInput" placeholder="Ends with" autocomplete="off">
-        <input id="minLen" type="number" placeholder="Min" min="1">
+      <div class="app-layout">
         
-        <div class="control-group">
-          <button id="clearBtn" type="button">Clear</button>
-          <button id="capBtn" type="button">Cap: 10</button>
-          <button id="quickFireBtn">QuickFire: OFF</button>
+        <!-- LEFT SIDE: SEARCH & RESULTS -->
+        <div class="main-panel">
+          <div id="controls">
+            <input id="start" placeholder="Starts with (Tab)" autocomplete="off">
+            <input id="endInput" placeholder="Ends with" autocomplete="off">
+            <input id="minLen" type="number" placeholder="Min" min="1">
+            
+            <div class="control-group">
+              <button id="clearBtn" type="button">Clear</button>
+              <button id="capBtn" type="button">Cap: 10</button>
+              <button id="quickFireBtn">QuickFire: OFF</button>
+            </div>
+
+            <select id="sortMode">
+              <option value="short">Short → Long</option>
+              <option value="long">Long → Short</option>
+              <option value="alpha">Alphabetical</option>
+            </select>
+          </div>
+
+          <div id="results-wrapper">
+            <div class="results-header">
+              <span class="results-count">0 WORDS</span>
+              <input id="resultFilter" placeholder="Filter results...">
+            </div>
+            <ul id="results"></ul>
+          </div>
         </div>
 
-        <select id="sortMode">
-          <option value="short">Short → Long</option>
-          <option value="long">Long → Short</option>
-          <option value="alpha">Alphabetical</option>
-        </select>
-      </div>
-
-      <div id="results-wrapper">
-        <div class="results-header">
-          <span class="results-count">0 WORDS</span>
-          <input id="resultFilter" placeholder="Filter results...">
+        <!-- RIGHT SIDE: HEATMAP & SHORTCUTS -->
+        <div class="side-panel">
+          <h3>Methods</h3>
+          <div id="buttons"></div>
         </div>
-        <ul id="results"></ul>
+
       </div>
     </div>
-
-    <!-- RIGHT SIDE: HEATMAP & SHORTCUTS -->
-    <div class="side-panel">
-      <h3>METHODS</h3>
-      <div id="buttons"></div>
-    </div>
-
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // ===== DATA =====
+    const methods = [
+      "x", "z", "ness", "ess", "ally", "ism", "lla", "many", "perb", "hl", "ivy", "vy", "ts",
+      "tsu", "oo", "nga", "aphy", "achi", "aho", "uli", "alop", "bah", "ahu", "ili", "hyal",
+      "sz", "bh", "alin", "asht", "ael", "yle", "avy", "thra", "hais", "sio", "pf", "mh", "ui",
+      "pso", "zh", "weh", "pez", "ez", "az", "sd", "esso", "dh", "arma", "sidh", "dha", "sadh",
+      "kus", "lw", "tcha", "sf", "yc", "ycle", "yp", "tze", "aya", "asca", "fd", "gyms", "oso",
+      "azi", "bk", "hd", "cw", "wp", "cch", "pk", "pd", "gd", "nse", "fb", "sse", "mg", "hana",
+      "acus", "lh", "dii", "nk", "ikh", "ios", "ior", "trak", "elfs", "rg", "abug", "ths",
+      "sso", "ette", "lv", "kte", "obbi", "nja", "yd"
+    ];
+
+    let dictionary = [];
+    let cachedStartList = [];
+    let validMethods = [];
+    const buttons = {};
+
+    // ===== DOM =====
+    const buttonsDiv = document.getElementById("buttons");
+    const results = document.getElementById("results");
+    const startInput = document.getElementById("start");
+    const endInput = document.getElementById("endInput");
+    const capBtn = document.getElementById("capBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const sortMode = document.getElementById("sortMode");
+    const minLenInput = document.getElementById("minLen");
+    const quickFireBtn = document.getElementById("quickFireBtn");
+    const resultFilterInput = document.getElementById("resultFilter");
+    const resultsCount = document.querySelector(".results-count");
+
+    // ===== STATE =====
+    let capEnabled = true;
+    let quickFire = false;
+    let quickFireIndex = 0;
+
+    // ===== INIT =====
+    loadDictionary();
+    createMethodButtons();
+    setupEventListeners();
+
+    // ===== LOAD DICTIONARY =====
+    function loadDictionary() {
+      fetch("https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words.txt")
+        .then(res => res.text())
+        .then(text => {
+          dictionary = text
+            .split("\n")
+            .map(w => w.trim().toLowerCase())
+            .filter(w => /^[a-z]+$/.test(w));
+          runFullSearch(); 
+        });
+    }
+
+    // ===== CREATE METHOD BUTTONS =====
+    function createMethodButtons() {
+      methods.forEach(method => {
+        const btn = document.createElement("button");
+        btn.textContent = method;
+        btn.type = "button";
+
+        btn.addEventListener("click", () => {
+          endInput.value = method;
+          renderResults();
+        });
+
+        buttonsDiv.appendChild(btn);
+        buttons[method] = btn;
+      });
+    }
+
+    // ===== EVENT LISTENERS =====
+    function setupEventListeners() {
+      capBtn.classList.add("active");
+      capBtn.textContent = "Cap: 10";
+      capBtn.addEventListener("click", toggleCap);
+
+      clearBtn.addEventListener("click", clearEnd);
+      quickFireBtn.addEventListener("click", toggleQuickFire);
+
+      [startInput, endInput, minLenInput].forEach(input => {
+        input.addEventListener("keydown", handleEnter);
+      });
+
+      sortMode.addEventListener("change", renderResults);
+      resultFilterInput.addEventListener("input", renderResults);
+      
+      document.addEventListener("keydown", handleTab);
+      document.addEventListener("keydown", handleShiftAdvance);
+    }
+
+    // ===== EVENT HANDLERS =====
+    function toggleCap() {
+      capEnabled = !capEnabled;
+      capBtn.textContent = capEnabled ? "Cap: 10" : "Cap: OFF";
+      capBtn.classList.toggle("active", capEnabled);
+      renderResults();
+    }
+
+    function clearEnd() {
+      endInput.value = "";
+      renderResults();
+    }
+
+    function handleEnter(e) {
+      if (e.key === "Enter" && e.target === startInput) {
+        runFullSearch(e);
+      }
+    }
+
+    function toggleQuickFire() {
+      quickFire = !quickFire;
+      quickFireBtn.textContent = quickFire ? "QuickFire: ON" : "QuickFire: OFF";
+      quickFireBtn.classList.toggle("active", quickFire);
+      endInput.disabled = quickFire;
+    }
+
+    function handleShiftAdvance(e) {
+      if (!quickFire) return;
+      if (validMethods.length === 0) return;
+
+      if (e.key === "Shift") {
+        e.preventDefault();
+        quickFireIndex++;
+        if (quickFireIndex >= validMethods.length) quickFireIndex = 0;
+        applyQuickFire();
+        renderResults();
+      }
+    }
+
+    function handleTab(e) {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        startInput.focus();
+        startInput.value = "";
+      }
+    }
+
+    // ===== SEARCH =====
+    function runFullSearch() {
+      const start = startInput.value.toLowerCase();
+      const minLen = parseInt(minLenInput.value);
+      cacheStartList(start, minLen);
+      updateHeatmap();
+      quickFireIndex = 0;
+      applyQuickFire();
+      renderResults();
+    }
+
+    function cacheStartList(start, minLen) {
+      cachedStartList = dictionary.filter(w =>
+        (start === "" || w.startsWith(start)) &&
+        (isNaN(minLen) || w.length >= minLen)
+      );
+    }
+
+    // ===== HEATMAP + VALID METHODS =====
+    function updateHeatmap() {
+      validMethods = [];
+      methods.forEach(m => {
+        let count = 0;
+        for (let i = 0; i < cachedStartList.length; i++) {
+          if (cachedStartList[i].endsWith(m)) {
+            count++;
+            if (count >= 20) break;
+          }
+        }
+
+        if (count === 0) {
+          buttons[m].style.backgroundColor = "rgba(0,0,0,0.2)";
+          buttons[m].style.color = "rgba(255,255,255,0.15)";
+          buttons[m].style.borderColor = "rgba(255,255,255,0.05)";
+          return;
+        }
+
+        validMethods.unshift(m);
+        const ratio = Math.min(1, count / 20);
+        
+        // Monochromatic white heatmap scaling
+        const textOpacity = 0.4 + (ratio * 0.6);
+        const bgOpacity = 0.05 + (ratio * 0.2);
+        const borderOpacity = 0.15 + (ratio * 0.5);
+        
+        buttons[m].style.backgroundColor = `rgba(255, 255, 255, ${bgOpacity})`;
+        buttons[m].style.color = `rgba(255, 255, 255, ${textOpacity})`;
+        buttons[m].style.borderColor = `rgba(255, 255, 255, ${borderOpacity})`;
+      });
+    }
+
+    // ===== QUICK FIRE =====
+    function applyQuickFire(e) {
+      if (!quickFire) return;
+      if (validMethods.length === 0) return;
+      const index = e && e.shiftKey ? 1 : quickFireIndex;
+      const method = validMethods[index];
+      if (!method) return;
+      endInput.value = method;
+    }
+
+    // ===== RENDER RESULTS =====
+    function renderResults() {
+      const ending = endInput.value.toLowerCase();
+      const filterText = resultFilterInput.value.toLowerCase();
+      
+      results.innerHTML = "";
+
+      let filtered = cachedStartList
+        .filter(w => ending === "" || w.endsWith(ending))
+        .filter(w => filterText === "" || w.includes(filterText))
+        .sort(sortWords);
+        
+      const totalFound = filtered.length;
+      const displayList = filtered.slice(0, capEnabled ? 10 : 200);
+
+      resultsCount.textContent = totalFound + (totalFound === 1 ? " WORD" : " WORDS");
+
+      displayList.forEach(word => {
+        const li = document.createElement("li");
+        if (ending) {
+          const split = word.length - ending.length;
+          li.innerHTML = `${word.slice(0, split)}<span class="litMatch">${word.slice(split)}</span>`;
+        } else {
+          li.textContent = word;
+        }
+        results.appendChild(li);
+      });
+    }
+
+    // ===== SORT =====
+    function sortWords(a, b) {
+      const mode = sortMode.value;
+      if (mode === "short") return a.length - b.length || a.localeCompare(b);
+      if (mode === "long") return b.length - a.length || a.localeCompare(b);
+      if (mode === "alpha") return a.localeCompare(b);
+      return 0;
+    }
+  </script>
 </body>
 </html>
